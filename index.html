@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spesial Untukmu!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .font-great-vibes { font-family: 'Great Vibes', cursive; }
+        .hidden { display: none; }
+
+        /* Hearts Background */
+        .hearts { position: fixed; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 0; }
+        .heart { position: absolute; list-style: none; display: block; width: 20px; height: 20px; background: rgba(255, 192, 203, 0.4); bottom: -150px; animation: animate-heart 25s linear infinite; }
+        .heart:before, .heart:after { content: ''; position: absolute; width: 20px; height: 20px; background: rgba(255, 192, 203, 0.4); border-radius: 50%; }
+        .heart:before { left: -10px; }
+        .heart:after { top: -10px; }
+        .heart.h1 { left: 25%; width: 80px; height: 80px; animation-delay: 0s; }
+        .heart.h2 { left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s; }
+        .heart.h3 { left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
+        .heart.h4 { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; }
+        .heart.h5 { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
+        .heart.h6 { left: 75%; width: 110px; height: 110px; animation-delay: 3s; }
+        .heart.h7 { left: 35%; width: 150px; height: 150px; animation-delay: 7s; }
+        .heart.h8 { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 45s; }
+        .heart.h9 { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 35s; }
+        .heart.h10 { left: 85%; width: 150px; height: 150px; animation-delay: 0s; animation-duration: 11s; }
+        @keyframes animate-heart { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-120vh) rotate(720deg); opacity: 0; } }
+
+        /* Fade-in Animation */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 1.5s ease-in-out forwards; }
+
+        /* Confetti */
+        .confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; }
+        .confetti-piece { position: absolute; width: 8px; height: 16px; top: -20px; opacity: 0; animation: drop-confetti linear forwards; }
+        @keyframes drop-confetti { 0% { transform: translateY(0vh) rotateZ(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotateZ(720deg); opacity: 0; } }
+        
+        /* Candle Flame */
+        .flame-outer { position: absolute; bottom: 0; left: 50%; width: 100%; height: 100%; background: #ffac2b; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; animation: flame-flicker 1.5s ease-in-out infinite; filter: blur(1px); }
+        .flame-inner { position: absolute; bottom: 0; left: 50%; width: 70%; height: 70%; background: #ffdc73; border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; animation: flame-flicker 1.2s ease-in-out infinite; filter: blur(3px); }
+        .flame-base { position: absolute; bottom: -2px; left: 50%; width: 80%; height: 15%; background: #80bfff; border-radius: 50%; filter: blur(2px); }
+        @keyframes flame-flicker {
+            0%, 100% { transform: translateX(-50%) scaleY(1) skew(0deg); opacity: 1; }
+            25% { transform: translateX(-55%) scaleY(1.05) skew(5deg); opacity: 0.9; }
+            50% { transform: translateX(-50%) scaleY(1.1) skew(0deg); opacity: 1; }
+            75% { transform: translateX(-45%) scaleY(1.05) skew(-5deg); opacity: 0.9; }
+        }
+
+        /* Smoke Animation */
+        @keyframes puff-out-smoke { 0% { transform: translateY(0) scale(1); opacity: 0.7; } 100% { transform: translateY(-80px) scale(4); opacity: 0; } }
+        .animate-puff-out { animation: puff-out-smoke 2.5s ease-out forwards; }
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/"
+  }
+}
+</script>
+</head>
+<body class="bg-pink-50 text-gray-800 min-h-screen">
+
+    <audio id="background-music" src="https://cdn.pixabay.com/audio/2022/02/14/audio_29c03a985c.mp3" loop></audio>
+
+    <div class="hearts">
+        <div class="heart h1"></div> <div class="heart h2"></div> <div class="heart h3"></div> <div class="heart h4"></div> <div class="heart h5"></div>
+        <div class="heart h6"></div> <div class="heart h7"></div> <div class="heart h8"></div> <div class="heart h9"></div> <div class="heart h10"></div>
+    </div>
+
+    <!-- Initial Opening Screen -->
+    <div id="opening-screen" class="fixed inset-0 bg-white z-50 flex items-center justify-center text-center transition-opacity duration-1000">
+        <div class="p-8">
+            <h1 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-4">Happy Birthday, My Love</h1>
+            <p class="text-lg md:text-xl text-gray-600 mb-8">Aku punya sesuatu yang spesial untukmu...</p>
+            <button onclick="handleOpen()" class="bg-pink-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-110 flex items-center justify-center mx-auto">
+                Buka Hadiahmu
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 ml-2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content (Initially Hidden) -->
+    <main id="main-content" class="relative z-10 hidden">
+        <header class="min-h-screen flex items-center justify-center text-center bg-cover bg-center bg-fixed" style="background-image: url('https://picsum.photos/1920/1080?grayscale&blur=2')">
+            <div class="bg-black bg-opacity-40 p-8 rounded-xl backdrop-blur-sm">
+                <h1 class="text-5xl md:text-8xl font-great-vibes text-white">Barakallahu Fii Umrik my Darling</h1>
+                <p class="text-xl md:text-2xl text-pink-200 mt-4">dear to Intan Payou / Mak Ijah / ceceu / Momoy</p>
+            </div>
+        </header>
+        
+        <nav class="sticky top-0 bg-white/80 backdrop-blur-md shadow-md z-40 py-2 animate-fade-in">
+            <div class="container mx-auto flex justify-center items-center flex-wrap gap-x-4 md:gap-x-8 gap-y-2 px-4">
+                <a href="#greeting" onclick="handleSmoothScroll(event, '#greeting')" class="text-pink-500 hover:text-pink-700 font-semibold transition-colors duration-300 px-3 py-2 rounded-md text-sm md:text-base">Ucapanku</a>
+                <a href="#photos" onclick="handleSmoothScroll(event, '#photos')" class="text-pink-500 hover:text-pink-700 font-semibold transition-colors duration-300 px-3 py-2 rounded-md text-sm md:text-base">Kenangan</a>
+                <a href="#video" onclick="handleSmoothScroll(event, '#video')" class="text-pink-500 hover:text-pink-700 font-semibold transition-colors duration-300 px-3 py-2 rounded-md text-sm md:text-base">Video</a>
+                <a href="#wishes" onclick="handleSmoothScroll(event, '#wishes')" class="text-pink-500 hover:text-pink-700 font-semibold transition-colors duration-300 px-3 py-2 rounded-md text-sm md:text-base">Harapanmu</a>
+                <a href="#question" onclick="handleSmoothScroll(event, '#question')" class="text-pink-500 hover:text-pink-700 font-semibold transition-colors duration-300 px-3 py-2 rounded-md text-sm md:text-base">Pertanyaan</a>
+            </div>
+        </nav>
+
+        <!-- Sections -->
+        <section id="twenty" class="py-16 md:py-24 px-4 text-center">
+            <h2 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-8">Selamat Dua Puluh Tahun</h2>
+            <div class="flex justify-center items-center text-pink-400" style="text-shadow: 2px 2px 10px rgba(236, 72, 153, 0.3);">
+                <span class="text-9xl md:text-[12rem] font-bold">2</span>
+                <div class="mx-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 md:w-24 md:h-24 text-pink-300"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></div>
+                <span class="text-9xl md:text-[12rem] font-bold">0</span>
+            </div>
+            <p class="max-w-3xl mx-auto mt-8 text-lg">Dua dekade yang luar biasa telah kamu lewati, dan aku bersyukur bisa menjadi bagian dari ceritamu. Perjalanan kita baru saja dimulai.</p>
+        </section>
+
+        <section id="candle" class="py-16 md:py-24 px-4 text-center">
+            <h2 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-8">Waktunya Tiup Lilin!</h2>
+            <div class="max-w-md mx-auto bg-white/70 backdrop-blur-sm p-8 rounded-lg shadow-lg">
+                <div class="relative w-64 h-80 mx-auto mb-4">
+                    <div id="candle-top" class="absolute top-10 left-1/2 -translate-x-1/2 z-20">
+                        <div id="flame-container">
+                            <div class="absolute top-7 left-1/2 -translate-x-1/2 w-1 h-2 bg-gray-700 z-10"></div>
+                            <div class="absolute -top-1 left-1/2 -translate-x-1/2 w-5 h-10">
+                                <div class="flame-outer"></div> <div class="flame-inner"></div> <div class="flame-base"></div>
+                            </div>
+                        </div>
+                        <div id="smoke-container" class="absolute -top-4 left-1/2 -translate-x-1/2"></div>
+                        <div class="absolute top-8 left-1/2 w-3 h-10 bg-white border-2 border-pink-200 rounded-full" style="transform: translateX(-50%)"></div>
+                    </div>
+                    <div class="absolute bottom-0 w-full h-56">
+                        <div class="absolute top-0 w-full h-16 bg-pink-200 rounded-t-xl z-10"></div>
+                        <div class="absolute top-12 w-full h-8 bg-pink-300 z-10" style="border-radius: 50% / 20%"></div>
+                        <div class="absolute top-14 w-full h-4 bg-pink-300 z-10"></div>
+                        <div class="absolute top-16 w-full h-24 bg-pink-100"></div>
+                        <div class="absolute top-[12.5rem] w-full h-8 bg-pink-300 z-10" style="border-radius: 50% / 20%"></div>
+                        <div class="absolute top-[12.7rem] w-full h-4 bg-pink-300 z-10"></div>
+                        <div class="absolute bottom-0 w-full h-4 bg-white rounded-lg shadow-2xl"></div>
+                        <div class="absolute -bottom-2 left-[-5%] w-[110%] h-4 bg-white rounded-lg shadow-2xl"></div>
+                    </div>
+                </div>
+                <div id="candle-message">
+                    <p class="mt-6 mb-6 text-lg">Buat permohonan dan tiup lilinnya!</p>
+                    <button onclick="handleBlowCandle()" class="bg-pink-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-110">Tiup Lilin!</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="greeting" class="py-16 md:py-24 px-4 text-center">
+            <h2 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-8">Ucapanku Untukmu</h2>
+            <div class="max-w-3xl mx-auto bg-white/70 backdrop-blur-sm p-8 md:p-12 rounded-lg shadow-lg text-left text-lg leading-relaxed">
+                <p class="mb-4">Untuk kekasih hatiku,</p>
+                <p class="mb-4">Selamat ulang tahun, cintaku. Hari ini adalah hari di mana dunia diberkati dengan kehadiranmu, dan aku adalah orang yang paling beruntung karena bisa memilikimu dalam hidupku. Setiap hari bersamamu adalah anugerah yang tak ternilai.</p>
+                <p class="mb-4">Kamu adalah cahayaku di saat gelap, alasanku untuk tersenyum, dan inspirasiku untuk menjadi orang yang lebih baik. Terima kasih untuk semua cinta, tawa, dan dukungan yang tak pernah berhenti kamu berikan.</p>
+                <p>Aku sangat mencintaimu, lebih dari kata-kata yang bisa kuucapkan. Selamat bertambah usia, sayang.</p>
+                <p class="mt-6 font-great-vibes text-3xl text-right text-pink-500">- Dengan Penuh Cinta</p>
+            </div>
+        </section>
+        
+        <section id="photos" class="py-16 md:py-24 px-4 text-center">
+            <h2 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-8">Kenangan Indah Kita</h2>
+            <p class="max-w-3xl mx-auto mb-16 text-lg">Setiap momen ini adalah kepingan puzzle yang membentuk cerita kita. Mari kita lihat kembali perjalanan indah yang telah kita lalui bersama.</p>
+            <div id="memories-container" class="max-w-4xl mx-auto space-y-12 md:space-y-20">
+                <!-- Memories will be injected by JavaScript -->
+            </div>
+        </section>
+
+        <section id="video" class="py-16 md:py-24 px-4 text-center">
+            <h2 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-8">Video Spesial Untukmu</h2>
+            <p class="max-w-3xl mx-auto mb-12 text-lg">Aku sudah menyiapkan video singkat yang merangkum perjalanan kita. Semoga kamu suka!</p>
+            <div class="aspect-video max-w-4xl mx-auto bg-pink-200 border-8 border-white shadow-xl rounded-lg flex items-center justify-center">
+                <div class="text-center text-pink-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mx-auto" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                    <p class="mt-4 font-semibold text-xl">Video akan diputar di sini</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="wishes" class="py-16 md:py-24 px-4 text-center">
+            <h2 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-8">Harapanmu Untuk Kita</h2>
+            <div class="max-w-3xl mx-auto bg-white/70 backdrop-blur-sm p-8 md:p-12 rounded-lg shadow-lg text-center text-lg leading-relaxed">
+                <p class="mb-6">Sekarang giliranmu, tuliskan apa harapanmu untuk hubungan kita ke depannya di sini...</p>
+                <textarea id="wish-textarea" class="w-full h-40 p-4 border-2 border-pink-200 rounded-lg focus:ring-pink-400 focus:border-pink-400 transition duration-300 text-gray-700 text-base" placeholder="Aku berharap kita..."></textarea>
+                <p id="wish-feedback" class="mt-6 text-pink-600 font-semibold hidden">Terima kasih sudah menuliskan harapanmu, sayang!</p>
+            </div>
+        </section>
+
+        <section id="question" class="py-16 md:py-24 px-4 text-center">
+            <h2 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-8">Satu Pertanyaan Penting...</h2>
+            <div id="question-container" class="min-h-[250px] flex items-center justify-center">
+                <div id="open-question-btn-container" class="animate-fade-in">
+                    <p class="text-lg mb-8">Sebagai penutup, aku punya satu pertanyaan terakhir untukmu...</p>
+                    <button onclick="showFinalQuestion()" class="bg-pink-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-110 flex items-center justify-center mx-auto">
+                        Buka Pertanyaan
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 ml-2"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <footer class="text-center py-12 text-gray-500">
+            <p class="text-2xl font-great-vibes text-pink-500">I Love You</p>
+            <p>Dibuat dengan ❤️ untuk orang yang paling kusukai.</p>
+            <button id="share-button" onclick="handleShare()" class="mt-6 bg-white text-pink-500 border border-pink-500 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-pink-100 transition-all duration-300 transform hover:scale-110 flex items-center justify-center mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"></path></svg>
+                <span>Bagikan Ucapan Ini</span>
+            </button>
+        </footer>
+    </main>
+
+    <div id="confetti-container" class="confetti-container"></div>
+
+<script>
+    let confirmationStep = 0;
+
+    const memories = [
+        { description: "Ingat waktu kita pertama kali ketemu? Aku nggak akan pernah lupa senyum manismu hari itu. Momen itu mengubah segalanya." },
+        { description: "Perjalanan pertama kita ke pantai. Kita lari-larian dikejar ombak, ketawa sampai sakit perut. Hari itu aku sadar, aku mau lebih banyak hari seperti ini sama kamu." },
+        { description: "Malam saat kita nonton bintang sambil cerita semua mimpi kita. Di bawah langit yang sama, aku berjanji dalam hati untuk bantu kamu wujudkan semua mimpimu." },
+        { description: "Waktu kamu lagi sedih dan aku coba hibur dengan lelucon garingku. Bukannya ketawa, kamu malah nangis di pelukanku. Saat itu aku tahu, hatiku akan selalu jadi tempatmu pulang." },
+        { description: "Setiap momen sederhana, seperti minum kopi pagi atau nonton film di rumah, jadi luar biasa karena ada kamu di sampingku." },
+        { description: "Momen saat kita kehujanan dan berteduh di warung kecil, itu jadi salah satu kenangan favoritku." },
+        { description: "Pertama kali aku masakin buat kamu. Walaupun rasanya mungkin aneh, tapi kamu tetap bilang enak. Terima kasih ya." },
+        { description: "Saat kita nyanyi bareng di mobil, nggak peduli suara fals dan lirik salah semua. Yang penting kita bahagia." },
+        { description: "Waktu kita begadang sampai pagi cuma buat ngobrolin hal-hal nggak penting. Aku rindu momen-momen itu." },
+        { description: "Hari di mana kamu kenalin aku ke teman-temanmu. Aku merasa jadi orang paling beruntung di dunia." },
+        { description: "Setiap 'selamat pagi' dan 'selamat malam' darimu selalu berhasil membuat hariku lebih baik." },
+        { description: "Ingat saat kita mencoba resep baru dan dapurnya jadi berantakan? Itu kekacauan yang paling menyenangkan." },
+        { description: "Caramu menatapku saat aku sedang bercerita, seolah-olah aku satu-satunya orang di dunia ini." },
+        { description: "Momen saat kita saling diam, tapi tetap merasa nyaman karena tahu kita ada untuk satu sama lain." },
+        { description: "Ketika kamu memberiku semangat saat aku merasa gagal. Kamu adalah suporter terbaikku." },
+        { description: "Jalan-jalan sore tanpa tujuan, hanya menikmati kebersamaan kita. Aku suka itu." },
+        { description: "Melihatmu tertawa lepas karena leluconku adalah musik terindah buatku." },
+        { description: "Saat kamu memegang tanganku untuk pertama kalinya. Aku masih bisa merasakan debaran jantungku saat itu." },
+        { description: "Momen saat kita menyadari bahwa kita punya mimpi masa depan yang sama. Itu meyakinkan hatiku." },
+        { description: "Dan hari ini, di ulang tahunmu, adalah kenangan baru yang akan selalu aku simpan. Aku mencintaimu." }
+    ];
+
+    function handleOpen() {
+        const openingScreen = document.getElementById('opening-screen');
+        const mainContent = document.getElementById('main-content');
+        const audio = document.getElementById('background-music');
+        
+        openingScreen.style.opacity = '0';
+        setTimeout(() => {
+            openingScreen.classList.add('hidden');
+            mainContent.classList.remove('hidden');
+            document.body.style.overflow = 'auto';
+        }, 1000);
+
+        if (audio) {
+            audio.volume = 0.3;
+            audio.play().catch(e => console.error("Autoplay was blocked", e));
+        }
+    }
+
+    function handleBlowCandle() {
+        document.getElementById('flame-container').classList.add('hidden');
+        const smokeContainer = document.getElementById('smoke-container');
+        for (let i = 0; i < 5; i++) {
+            const smoke = document.createElement('div');
+            smoke.className = 'absolute bottom-0 w-8 h-8 bg-gray-400/40 rounded-full animate-puff-out';
+            smoke.style.transformOrigin = 'bottom center';
+            smoke.style.animationDelay = `${i * 0.15}s`;
+            smoke.style.left = `${(Math.random() - 0.5) * 30}px`;
+            smokeContainer.appendChild(smoke);
+        }
+        document.getElementById('candle-message').innerHTML = '<p class="mt-8 text-2xl font-bold text-pink-600 animate-fade-in">Horeee! Semoga semua harapanmu terkabul!</p>';
+    }
+
+    function showFinalQuestion() {
+        document.getElementById('open-question-btn-container').classList.add('hidden');
+        confirmationStep = 0;
+        renderQuestionStep();
+    }
+    
+    function handleYesConfirmation() {
+        confirmationStep++;
+        renderQuestionStep();
+        if(confirmationStep === 4) {
+            setTimeout(() => {
+                confirmationStep++;
+                renderQuestionStep();
+            }, 2000);
+        }
+    }
+
+    function renderQuestionStep() {
+        const container = document.getElementById('question-container');
+        let content = '';
+        switch(confirmationStep) {
+            case 0:
+                content = `
+                    <div class="animate-fade-in w-full">
+                        <p class="text-3xl md:text-4xl text-gray-700 mb-8 max-w-2xl mx-auto">Will you be my girlfriend, again and forever?</p>
+                        <div class="flex justify-center gap-6 mt-10">
+                            <button onclick="handleYesConfirmation()" class="bg-green-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-110">Yes!</button>
+                            <button onclick="alert('Yakin? Coba klik \\'Yes\\' deh :)')" class="bg-red-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-red-600 transition-all duration-300 transform hover:scale-110">No</button>
+                        </div>
+                    </div>`;
+                break;
+            case 1:
+                content = `<div class="animate-fade-in w-full"><p class="text-2xl md:text-3xl mb-6">Apakah kamu yakin?</p><button onclick="handleYesConfirmation()" class="bg-pink-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-110">Iya, yakin banget!</button></div>`;
+                break;
+            case 2:
+                content = `<div class="animate-fade-in w-full"><p class="text-2xl md:text-3xl mb-6">Nggak nyesel kan?</p><button onclick="handleYesConfirmation()" class="bg-pink-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-110">Nggak akan pernah!</button></div>`;
+                break;
+            case 3:
+                content = `<div class="animate-fade-in w-full"><p class="text-2xl md:text-3xl mb-6">Beneran serius nih??</p><button onclick="handleYesConfirmation()" class="bg-pink-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-110">Serius pake banget!</button></div>`;
+                break;
+            case 4:
+                content = `<div class="animate-fade-in w-full"><p class="text-2xl md:text-3xl mb-6">yeaaaayyyy (salting)</p></div>`;
+                break;
+            case 5:
+                startConfetti();
+                content = `<div class="animate-fade-in w-full"><p class="mt-8 text-3xl font-bold text-pink-600">SO NOW I CAN CALL U MY DARLING😘😜❤️</p></div>`;
+                break;
+        }
+        container.innerHTML = content;
+    }
+
+    function handleSmoothScroll(event, targetId) {
+        event.preventDefault();
+        document.querySelector(targetId).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function handleShare() {
+        const shareButton = document.getElementById('share-button');
+        const shareText = shareButton.querySelector('span');
+        const shareUrl = window.location.href;
+        
+        if (navigator.share) {
+            try {
+                await navigator.share({ title: 'Ucapan Spesial Untukmu!', text: 'Aku punya sesuatu yang spesial untukmu...', url: shareUrl });
+            } catch (err) { console.error("Error sharing:", err); }
+        } else {
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                shareText.textContent = 'Link Disalin!';
+                setTimeout(() => { shareText.textContent = 'Bagikan Ucapan Ini'; }, 2000);
+            } catch (err) { alert('Gagal menyalin link.'); }
+        }
+    }
+    
+    function startConfetti() {
+        const container = document.getElementById('confetti-container');
+        const colors = ['#fce4ec', '#f8bbd0', '#f48fb1', '#f06292', '#ec407a', '#e91e63'];
+        for (let i = 0; i < 150; i++) {
+            const piece = document.createElement('div');
+            piece.className = 'confetti-piece';
+            piece.style.left = `${Math.random() * 100}%`;
+            piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            piece.style.animationDuration = `${Math.random() * 3 + 4}s`;
+            piece.style.animationDelay = `${Math.random() * 2}s`;
+            piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+            container.appendChild(piece);
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        document.body.style.overflow = 'hidden';
+        
+        const memoriesContainer = document.getElementById('memories-container');
+        memories.forEach((memory, index) => {
+            const isEven = index % 2 === 0;
+            const rotation = Math.floor(Math.random() * 6) - 3;
+            const item = document.createElement('div');
+            item.className = `flex flex-col md:flex-row items-center gap-8 animate-fade-in ${isEven ? 'md:flex-row-reverse' : ''}`;
+            item.style.animationDelay = `${index * 350}ms`;
+            item.style.opacity = '0';
+            
+            item.innerHTML = `
+                <div class="md:w-1/2 w-full p-2 bg-white shadow-lg transform transition-transform duration-500 hover:scale-105 hover:shadow-2xl hover:z-10" style="transform: rotate(${rotation}deg)">
+                    <div class="w-full h-64 bg-pink-100 flex items-center justify-center border-2 border-white">
+                        <span class="text-pink-400 font-medium">Foto Kenangan ${index + 1}</span>
+                    </div>
+                </div>
+                <div class="md:w-1/2 w-full ${isEven ? 'md:text-right' : 'md:text-left'} text-center">
+                    <p class="text-lg leading-relaxed bg-white/70 backdrop-blur-sm p-6 rounded-lg shadow-md inline-block">${memory.description}</p>
+                </div>
+            `;
+            memoriesContainer.appendChild(item);
+        });
+
+        document.getElementById('wish-textarea').addEventListener('input', (e) => {
+            const feedback = document.getElementById('wish-feedback');
+            if (e.target.value) {
+                feedback.classList.remove('hidden');
+            } else {
+                feedback.classList.add('hidden');
+            }
+        });
+    });
+
+</script>
+</body>
+</html>
