@@ -14,9 +14,23 @@ const ShareIcon = ({ className }: { className?: string }) => (
     </svg>
 );
 
+// Animated Words Component
+const AnimatedWords: React.FC<{ text: string; className?: string; delay?: number }> = ({ text, className, delay = 300 }) => {
+    const words = text.split(' ');
+    return (
+        <p className={className || "text-3xl md:text-4xl text-gray-700 mb-8 max-w-2xl mx-auto"}>
+            {words.map((word, index) => (
+                <span key={index} className="inline-block animate-fade-in" style={{ animationDelay: `${index * delay}ms`, opacity: 0 }}>
+                    {word}&nbsp;
+                </span>
+            ))}
+        </p>
+    );
+};
+
 
 // Memory Item Component for the timeline
-const MemoryItem: React.FC<{ description: string; index: number }> = ({ description, index }) => {
+const MemoryItem: React.FC<{ description: string; index: number; imageUrl?: string }> = ({ description, index, imageUrl }) => {
     const isEven = index % 2 === 0;
     const rotation = Math.floor(Math.random() * 6) - 3; // a bit less rotation for a cleaner look
 
@@ -26,8 +40,12 @@ const MemoryItem: React.FC<{ description: string; index: number }> = ({ descript
             style={{ animationDelay: `${index * 350}ms`, opacity: 0 }} // Start with opacity 0 for the animation
         >
             <div className="md:w-1/2 w-full p-2 bg-white shadow-lg transform transition-transform duration-500 hover:scale-105 hover:shadow-2xl hover:z-10" style={{ transform: `rotate(${rotation}deg)` }}>
-                <div className="w-full h-64 bg-pink-100 flex items-center justify-center border-2 border-white">
-                    <span className="text-pink-400 font-medium">Foto Kenangan {index + 1}</span>
+                <div className="w-full h-64 bg-pink-100 flex items-center justify-center border-2 border-white overflow-hidden">
+                    {imageUrl ? (
+                        <img src={imageUrl} alt={`Foto Kenangan ${index + 1}`} className="w-full h-full object-cover" />
+                    ) : (
+                        <span className="text-pink-400 font-medium">Foto Kenangan {index + 1}</span>
+                    )}
                 </div>
             </div>
             <div className={`md:w-1/2 w-full ${isEven ? 'md:text-right' : 'md:text-left'} text-center`}>
@@ -65,6 +83,19 @@ const ConfettiCelebration: React.FC = () => {
 
     return <div className="confetti-container">{confettiPieces}</div>;
 };
+
+// Envelope Animation Component
+const EnvelopeAnimation = () => (
+    <div className="flex items-center justify-center h-40">
+        <div className="envelope">
+            <div className="envelope-back"></div>
+            <div className="envelope-letter"></div>
+            <div className="envelope-front"></div>
+            <div className="envelope-flap"></div>
+        </div>
+    </div>
+);
+
 
 const Navigation: React.FC<{ onLinkClick: (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => void }> = ({ onLinkClick }) => {
     const navLinks = [
@@ -139,34 +170,72 @@ const App: React.FC = () => {
     const [isOpened, setIsOpened] = useState(false);
     const [showContent, setShowContent] = useState(false);
     const [herWish, setHerWish] = useState('');
+    const [isWishSent, setIsWishSent] = useState(false);
+    const [showWishFeedback, setShowWishFeedback] = useState(false);
     const [isCandleBlown, setIsCandleBlown] = useState(false);
     const [showFinalQuestion, setShowFinalQuestion] = useState(false);
+    const [questionProgressionStep, setQuestionProgressionStep] = useState(0);
     const [showConfetti, setShowConfetti] = useState(false);
     const [confirmationStep, setConfirmationStep] = useState(0);
     const audioRef = useRef<HTMLAudioElement>(null);
     
-    // Placeholder data for memories
+    /*
+    ==================================================================================
+    === PANDUAN CARA MENAMBAHKAN FOTO KENANGAN (TUTORIAL EDIT MANUAL DI GITHUB) ===
+    ==================================================================================
+
+    Hai! Untuk menambahkan foto pada setiap kenangan, ikuti langkah-langkah mudah ini:
+
+    LANGKAH 1: UPLOAD FOTO KE GITHUB
+    1. Di halaman utama repository GitHub-mu, klik "Add file" lalu "Upload files".
+    2. Buat folder baru untuk menyimpan foto agar rapi. Caranya, ketik nama folder diikuti tanda slash (/), contoh: `images/`
+    3. Upload semua fotomu ke dalam folder `images` tersebut.
+    4. Setelah selesai, klik "Commit changes".
+
+    LANGKAH 2: SALIN PATH FOTO
+    1. Buka folder `images` yang baru kamu buat di GitHub.
+    2. Path atau alamat file-nya akan terlihat di URL browser atau bisa langsung kamu gunakan sebagai `images/nama-file-fotonya.jpg`.
+       Contoh: Jika kamu upload foto bernama `kenangan-1.jpg` ke folder `images`, maka path-nya adalah `images/kenangan-1.jpg`.
+
+    LANGKAH 3: EDIT KODE DI BAWAH INI
+    1. Untuk setiap "kenangan", tambahkan properti `imageUrl` diikuti dengan path fotomu di dalam tanda kutip.
+    2. Pastikan ada koma (,) setelah `imageUrl` jika `description` masih ada setelahnya.
+
+    CONTOH SEBELUM DIEDIT:
+    { description: "Ingat waktu pertama kali kita foto?..." }
+
+    CONTOH SESUDAH DIEDIT (dengan foto dari folder 'images'):
+    {
+      imageUrl: "images/kenangan-1.jpg",
+      description: "Ingat waktu pertama kali kita foto?..."
+    },
+
+    Ulangi langkah ini untuk semua kenangan yang ingin kamu tambahkan fotonya.
+    Jika sebuah kenangan tidak punya `imageUrl` atau dikosongkan (""), maka akan ditampilkan placeholder "Foto Kenangan".
+    Selamat mencoba! ❤️
+    ==================================================================================
+    */
     const memories = [
-        { description: "Ingat waktu kita pertama kali ketemu? Aku nggak akan pernah lupa senyum manismu hari itu. Momen itu mengubah segalanya." },
-        { description: "Perjalanan pertama kita ke pantai. Kita lari-larian dikejar ombak, ketawa sampai sakit perut. Hari itu aku sadar, aku mau lebih banyak hari seperti ini sama kamu." },
-        { description: "Malam saat kita nonton bintang sambil cerita semua mimpi kita. Di bawah langit yang sama, aku berjanji dalam hati untuk bantu kamu wujudkan semua mimpimu." },
-        { description: "Waktu kamu lagi sedih dan aku coba hibur dengan lelucon garingku. Bukannya ketawa, kamu malah nangis di pelukanku. Saat itu aku tahu, hatiku akan selalu jadi tempatmu pulang." },
-        { description: "Setiap momen sederhana, seperti minum kopi pagi atau nonton film di rumah, jadi luar biasa karena ada kamu di sampingku." },
-        { description: "Momen saat kita kehujanan dan berteduh di warung kecil, itu jadi salah satu kenangan favoritku." },
-        { description: "Pertama kali aku masakin buat kamu. Walaupun rasanya mungkin aneh, tapi kamu tetap bilang enak. Terima kasih ya." },
-        { description: "Saat kita nyanyi bareng di mobil, nggak peduli suara fals dan lirik salah semua. Yang penting kita bahagia." },
-        { description: "Waktu kita begadang sampai pagi cuma buat ngobrolin hal-hal nggak penting. Aku rindu momen-momen itu." },
-        { description: "Hari di mana kamu kenalin aku ke teman-temanmu. Aku merasa jadi orang paling beruntung di dunia." },
-        { description: "Setiap 'selamat pagi' dan 'selamat malam' darimu selalu berhasil membuat hariku lebih baik." },
-        { description: "Ingat saat kita mencoba resep baru dan dapurnya jadi berantakan? Itu kekacauan yang paling menyenangkan." },
-        { description: "Caramu menatapku saat aku sedang bercerita, seolah-olah aku satu-satunya orang di dunia ini." },
-        { description: "Momen saat kita saling diam, tapi tetap merasa nyaman karena tahu kita ada untuk satu sama lain." },
-        { description: "Ketika kamu memberiku semangat saat aku merasa gagal. Kamu adalah suporter terbaikku." },
-        { description: "Jalan-jalan sore tanpa tujuan, hanya menikmati kebersamaan kita. Aku suka itu." },
-        { description: "Melihatmu tertawa lepas karena leluconku adalah musik terindah buatku." },
-        { description: "Saat kamu memegang tanganku untuk pertama kalinya. Aku masih bisa merasakan debaran jantungku saat itu." },
-        { description: "Momen saat kita menyadari bahwa kita punya mimpi masa depan yang sama. Itu meyakinkan hatiku." },
-        { description: "Dan hari ini, di ulang tahunmu, adalah kenangan baru yang akan selalu aku simpan. Aku mencintaimu." }
+        { imageUrl: "https://picsum.photos/seed/kenangan1/400/300", description: "Ingat waktu pertama kali kita foto? jujur bingung ngomongny gmana, tpi yg ak liat antusiasme kmu yg bnget2 pngen foto sama ak😎. Rasanya ga enak kalau nolak." },
+        { imageUrl: "", description: "Waktu kita nekat foto bareng di pondok yeah, kmu mah enak dh lulus, ak mempertaruhkan 6 taun mondok demi satu kali foto sama kmu. hmm.....apa sii yang ga buat kmu😇" },
+        { imageUrl: "", description: "Ternyata foto ini jga ngebuat ak merasakan sesuatu yg lom pernah dirasakan lokh ketika itu, sebelomnya ga pernah ada foto berdua dikaca, saat itu ada kesempatan buat foto berdua di kaca rasanya nyaaaaman bangett" },
+        { imageUrl: "", description: "kukira kamu penggemar novel novel alay bgituh, trnyata emg iyaa....jujur dpet bnyak insight sinopsis novel2 yg emg lom pernah ak baca, jdinya yaa udh dengerin kmu aj yapping, ak nya oh oh aja sebenernya, wkwkwk" },
+        { imageUrl: "", description: " first photo box gabisa dibuat kata2, pokoknya tegang, bingung, malu malu kucing, ya akhirnya spontan ajh gayanyaa🫣" },
+        { imageUrl: "", description: "first time klo tau trnyata es krim versi mewah namanya gelatto, maap warga jelata ga tau....tpi pas itu berkesan jgk diajak keliling2 sekitar blok M pas sore sore😆" },
+        { imageUrl: "", description: " photobox tuk yg kesekian kalinya yey, bukannya tambah improve malah si onoh ilang dari kamera😮‍💨" },
+        { imageUrl: "", description: " difotoin sama fotografer handal, sebuah kehormatan besar, thx babukuh (aboel) telah mengabadikan momen ini. Pasca foto kyknya ada yg nanyain kepastian hubungan deh, katanya cemburu tkut bnyak yg ngintilin pas dh kuliah, siapa yahh yg ngomong🤔" },
+        { imageUrl: "", description: "yg kesekian kalinyaa yahh, alhamdulillah smakin hari smakin jago berpose, mana si cewenya keliatan mungil lgih di foto" },
+        { imageUrl: "", description: "second time foto depan kaca, makin nempel yahhh" },
+        { imageUrl: "", description: "ini jugakk, siapa yg ngide megang pipi yh, jujur ga kepikiran..." },
+        { imageUrl: "", description: "ini nihh, orang lagi kelaperan ga diwajarin makan double chicken, pdalah lom makan dari pagi....dalem hatinya shock kali yaa ngeliat org makan porsi kulii, ya maap dehh🙏. mana setelahnya dijejelin sama jasuke lagii yakk" },
+        { imageUrl: "", description: "disini vibesnya enak banget buat ngobrol, cuman sayang kurang lamaa...tpi kata ak ga worth it sii itu wingsnya cilik cilik" },
+        { imageUrl: "", description: " waktunya membuat cawan dan vas bunga yg bentuknya anomali ituuu, pdahal rencanany mau tukeran, tpi gajadiii, huhu" },
+        { imageUrl: "", description: " si teteh balik ke jkt, kyknya dia mau nangis deh meninggalkan nangor, secinta itu dia sama jatos, laen kali maen lagi yah" },
+        { imageUrl: "", description: " ketemu si afgan yg biasa aja yaah, dia ga nyadar aj klo disampingnya lebih ngartis dripada si artis" },
+        { imageUrl: "", description: "pokoknya yg ngide2 bgini itu si ceuceu yaa, ak mah manut2 ajh" },
+        { imageUrl: "", description: "its the best photo in the universe, absolute cinema...makasi lokh fotografernya ni handal bnget. Didukung jgak ama muka gantengnya si cowok dan cantiknya si cewek" },
+        { imageUrl: "", description: " ini kalau ak ga minta orang buat motoin kyknya gabakal ada kenangannya sii, untung orgnya juga bagus yh motoin nyh😆" },
+        { imageUrl: "", description: "makin hari makin nempel dan makin monyong ajahh tuhh, wkwk" }
     ];
 
     const handleOpen = () => {
@@ -183,13 +252,29 @@ const App: React.FC = () => {
     const handleBlowCandle = () => {
         setIsCandleBlown(true);
     };
+
+    const handleSendWish = () => {
+        if (!herWish.trim()) return;
+        setIsWishSent(true);
+        setTimeout(() => {
+            setShowWishFeedback(true);
+        }, 2800); // Wait for animation to finish
+    };
     
+    const handleEditWish = () => {
+        setIsWishSent(false);
+        setShowWishFeedback(false);
+    };
+
     const handleYesConfirmation = () => {
         if (confirmationStep < 4) {
             setConfirmationStep(prev => prev + 1);
-        } else {
-            setShowConfetti(true);
-            setConfirmationStep(prev => prev + 1);
+        } else if (confirmationStep === 4) {
+            setConfirmationStep(prev => prev + 1); // Move to salting step
+            setTimeout(() => {
+                setShowConfetti(true);
+                setConfirmationStep(prev => prev + 1); // Move to final message
+            }, 2000);
         }
     };
 
@@ -207,14 +292,26 @@ const App: React.FC = () => {
     }, [showContent]);
     
     useEffect(() => {
-        if (confirmationStep === 4) {
+        if (showFinalQuestion && questionProgressionStep > 0 && questionProgressionStep < 9) {
+            const delays: { [key: number]: number } = {
+                1: 2000, // will u be my girlfriend for 4 times
+                2: 3000, // spring, summer, autumn, and winter
+                3: 2000, // oh no may be 3 times
+                4: 3500, // Yesterday, today, and tomorrow
+                5: 2000, // hmm...may be 2 times
+                6: 2500, // day and night
+                7: 2000, // oh no...i wanna 1 times
+                8: 1500, // everyday -> then show buttons
+            };
             const timer = setTimeout(() => {
-                handleYesConfirmation();
-            }, 2000); // Wait 2 seconds before showing the final message
+                setQuestionProgressionStep(prev => prev + 1);
+            }, delays[questionProgressionStep]);
 
-            return () => clearTimeout(timer); // Cleanup timer
+            return () => clearTimeout(timer);
         }
-    }, [confirmationStep]);
+    }, [showFinalQuestion, questionProgressionStep]);
+
+    const pClass = "text-3xl md:text-4xl text-gray-700 mb-8 max-w-2xl mx-auto";
 
     return (
         <div className="bg-pink-50 text-gray-800 min-h-screen">
@@ -248,7 +345,7 @@ const App: React.FC = () => {
                     
                     <Navigation onLinkClick={handleSmoothScroll} />
 
-                    <Section title="Selamat Dua Puluh Tahun" id="twenty">
+                    <Section title="tak terasa sudah dua puluh tahun hidup di dunia yah" id="twenty">
                         <div className="flex justify-center items-center text-pink-400" style={{ textShadow: '2px 2px 10px rgba(236, 72, 153, 0.3)' }}>
                             <span className="text-9xl md:text-[12rem] font-bold">2</span>
                             <div className="mx-4">
@@ -327,10 +424,10 @@ const App: React.FC = () => {
 
                      <Section title="Ucapanku Untukmu" id="greeting">
                         <div className="max-w-3xl mx-auto bg-white/70 backdrop-blur-sm p-8 md:p-12 rounded-lg shadow-lg text-left text-lg leading-relaxed">
-                            <p className="mb-4">Untuk kekasih hatiku,</p>
-                            <p className="mb-4">Selamat ulang tahun, cintaku. Hari ini adalah hari di mana dunia diberkati dengan kehadiranmu, dan aku adalah orang yang paling beruntung karena bisa memilikimu dalam hidupku. Setiap hari bersamamu adalah anugerah yang tak ternilai.</p>
-                            <p className="mb-4">Kamu adalah cahayaku di saat gelap, alasanku untuk tersenyum, dan inspirasiku untuk menjadi orang yang lebih baik. Terima kasih untuk semua cinta, tawa, dan dukungan yang tak pernah berhenti kamu berikan.</p>
-                            <p>Aku sangat mencintaimu, lebih dari kata-kata yang bisa kuucapkan. Selamat bertambah usia, sayang.</p>
+                            <p className="mb-4">untuk intan payou,</p>
+                            <p className="mb-4">Selamat ulang tahun yh, hari ini hari dimana dunia diberkati dengan kehadiranmu, dan aku adalah orang yang paling beruntung bisa menemanimu hingga saat ini. Setiap hari mendengar ocehanmu adalah anugerah yang tak ternilai untukku.</p>
+                            <p className="mb-4">U're my shine, alasanku untuk tersenyum, dan inspirasiku untuk menjadi orang yang lebih baik. Terima kasih untuk semua cinta, tawa, dan dukungan yang tak pernah berhenti kamu berikan.</p>
+                            <p>Selamat bertambah usia, Intan Payou.</p>
                             <p className="mt-6 font-great-vibes text-3xl text-right text-pink-500">- Dengan Penuh Cinta</p>
                         </div>
                     </Section>
@@ -339,13 +436,13 @@ const App: React.FC = () => {
                         <p className="max-w-3xl mx-auto mb-16 text-lg">Setiap momen ini adalah kepingan puzzle yang membentuk cerita kita. Mari kita lihat kembali perjalanan indah yang telah kita lalui bersama.</p>
                         <div className="max-w-4xl mx-auto space-y-12 md:space-y-20">
                             {memories.map((memory, index) => (
-                                <MemoryItem key={index} index={index} description={memory.description} />
+                                <MemoryItem key={index} index={index} description={memory.description} imageUrl={memory.imageUrl} />
                             ))}
                         </div>
                     </Section>
 
                     <Section title="Video Spesial Untukmu" id="video">
-                        <p className="max-w-3xl mx-auto mb-12 text-lg">Aku sudah menyiapkan video singkat yang merangkum perjalanan kita. Semoga kamu suka!</p>
+                        <p className="max-w-3xl mx-auto mb-12 text-lg">silakan ditonton video singkat yg udh ak buat dengan sepenuh hati, Selamat Menyaksikan😇</p>
                         <div className="aspect-video max-w-4xl mx-auto bg-pink-200 border-8 border-white shadow-xl rounded-lg flex items-center justify-center">
                             <div className="text-center text-pink-500">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-20 w-20 mx-auto" viewBox="0 0 20 20" fill="currentColor">
@@ -357,17 +454,39 @@ const App: React.FC = () => {
                     </section>
 
                     <Section title="Harapanmu Untuk Kita" id="wishes">
-                         <div className="max-w-3xl mx-auto bg-white/70 backdrop-blur-sm p-8 md:p-12 rounded-lg shadow-lg text-center text-lg leading-relaxed">
-                            <p className="mb-6">Sekarang giliranmu, tuliskan apa harapanmu untuk hubungan kita ke depannya di sini...</p>
-                            <textarea
-                                className="w-full h-40 p-4 border-2 border-pink-200 rounded-lg focus:ring-pink-400 focus:border-pink-400 transition duration-300 text-gray-700 text-base"
-                                placeholder="Aku berharap kita..."
-                                value={herWish}
-                                onChange={(e) => setHerWish(e.target.value)}
-                                aria-label="Tulis harapanmu di sini"
-                            />
-                            {herWish && (
-                                <p className="mt-6 text-pink-600 font-semibold animate-fade-in">Terima kasih sudah menuliskan harapanmu, sayang!</p>
+                         <div className="max-w-3xl mx-auto bg-white/70 backdrop-blur-sm p-8 md:p-12 rounded-lg shadow-lg text-center text-lg leading-relaxed min-h-[350px] flex flex-col justify-center">
+                            {!isWishSent ? (
+                                <>
+                                    <p className="mb-6">Sekarang giliranmu, tuliskan apa harapanmu untuk hubungan kita ke depannya di sini...</p>
+                                    <textarea
+                                        className="w-full h-40 p-4 border-2 border-pink-200 rounded-lg focus:ring-pink-400 focus:border-pink-400 transition duration-300 text-gray-700 text-base"
+                                        placeholder="Aku berharap kita..."
+                                        value={herWish}
+                                        onChange={(e) => setHerWish(e.target.value)}
+                                        aria-label="Tulis harapanmu di sini"
+                                    />
+                                    <button
+                                        onClick={handleSendWish}
+                                        disabled={!herWish.trim()}
+                                        className="mt-6 bg-pink-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-110 disabled:bg-pink-300 disabled:cursor-not-allowed disabled:scale-100"
+                                    >
+                                        Kirim ke pujaan hati
+                                    </button>
+                                </>
+                            ) : !showWishFeedback ? (
+                                <EnvelopeAnimation />
+                            ) : (
+                                <div className="animate-fade-in">
+                                    <p className="text-pink-600 font-semibold text-2xl mb-6">
+                                        Terima kasih sudah mengirimkan harapanmu, Ceuceu! Aku akan membacanya. ( SS in dong soalnya gabisa di save😭)
+                                    </p>
+                                    <button
+                                        onClick={handleEditWish}
+                                        className="mt-4 bg-white text-pink-500 border border-pink-500 font-bold py-2 px-6 rounded-full shadow-lg hover:bg-pink-100 transition-all duration-300 transform hover:scale-110"
+                                    >
+                                        Ubah Harapanmu
+                                    </button>
+                                </div>
                             )}
                          </div>
                     </Section>
@@ -377,7 +496,7 @@ const App: React.FC = () => {
                             <div className="animate-fade-in">
                                 <p className="text-lg mb-8">Sebagai penutup, aku punya satu pertanyaan terakhir untukmu...</p>
                                 <button 
-                                    onClick={() => setShowFinalQuestion(true)} 
+                                    onClick={() => { setShowFinalQuestion(true); setQuestionProgressionStep(1); }} 
                                     className="bg-pink-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-110 flex items-center justify-center mx-auto"
                                 >
                                     Buka Pertanyaan
@@ -388,51 +507,65 @@ const App: React.FC = () => {
                             <div className="min-h-[250px] flex items-center justify-center">
                                 {showConfetti && <ConfettiCelebration />}
                                 
-                                {confirmationStep === 0 && (
-                                    <div key="step-0" className="animate-fade-in w-full">
-                                        <p className="text-3xl md:text-4xl text-gray-700 mb-8 max-w-2xl mx-auto">
-                                            Will you be my girlfriend, again and forever?
-                                        </p>
-                                        <div className="flex justify-center gap-6 mt-10">
-                                            <button 
-                                                onClick={() => setConfirmationStep(1)}
-                                                className="bg-green-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-110"
-                                            >
-                                                Yes!
-                                            </button>
-                                            <button 
-                                                className="bg-red-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-red-600 transition-all duration-300 transform hover:scale-110"
-                                                onClick={() => alert("Yakin? Coba klik 'Yes' deh :)")}
-                                            >
-                                                No
-                                            </button>
-                                        </div>
+                                {questionProgressionStep > 0 && questionProgressionStep < 9 && (
+                                    <div key={questionProgressionStep} className="animate-fade-in w-full">
+                                        {questionProgressionStep === 1 && <p className={pClass}>will u be my girlfriend for 4 times</p>}
+                                        {questionProgressionStep === 2 && <AnimatedWords text="spring, summer, autumn, and winter" className={pClass} />}
+                                        {questionProgressionStep === 3 && <p className={pClass}>oh no may be 3 times</p>}
+                                        {questionProgressionStep === 4 && <AnimatedWords text="Yesterday, today, and tomorrow" className={pClass} />}
+                                        {questionProgressionStep === 5 && <p className={pClass}>hmm...may be 2 times</p>}
+                                        {questionProgressionStep === 6 && <AnimatedWords text="day and night" className={pClass} />}
+                                        {questionProgressionStep === 7 && <p className={pClass}>oh no...i wanna 1 times</p>}
+                                        {questionProgressionStep === 8 && <p className={pClass}>everyday</p>}
                                     </div>
                                 )}
-
-                                {confirmationStep > 0 && confirmationStep < 5 && (
-                                     <div key={confirmationStep} className="animate-fade-in w-full flex flex-col items-center justify-center">
-                                        {confirmationStep === 1 && <p className="text-2xl md:text-3xl mb-6">Apakah kamu yakin?</p>}
-                                        {confirmationStep === 2 && <p className="text-2xl md:text-3xl mb-6">Nggak nyesel kan?</p>}
-                                        {confirmationStep === 3 && <p className="text-2xl md:text-3xl mb-6">Beneran serius nih??</p>}
-                                        {confirmationStep === 4 && <p className="text-2xl md:text-3xl mb-6">yeaaaayyyy (salting)</p>}
-                                        
-                                        {confirmationStep < 4 && (
-                                            <button 
-                                                onClick={handleYesConfirmation}
-                                                className="bg-pink-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-110"
-                                            >
-                                                {confirmationStep === 1 && "Iya, yakin banget!"}
-                                                {confirmationStep === 2 && "Nggak akan pernah!"}
-                                                {confirmationStep === 3 && "Serius pake banget!"}
-                                            </button>
-                                        )}
-                                     </div>
-                                )}
                                 
-                                {confirmationStep === 5 && (
-                                    <div key="step-5" className="animate-fade-in w-full">
-                                        <p className="mt-8 text-3xl font-bold text-pink-600">SO NOW I CAN CALL U MY DARLING😘😜❤️</p>
+                                {questionProgressionStep === 9 && (
+                                    <div className="w-full">
+                                        {confirmationStep === 0 && (
+                                            <div key="step-0" className="animate-fade-in w-full">
+                                                <div className="flex justify-center gap-6 mt-10">
+                                                    <button 
+                                                        onClick={handleYesConfirmation}
+                                                        className="bg-green-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-110"
+                                                    >
+                                                        Yes!
+                                                    </button>
+                                                    <button 
+                                                        className="bg-red-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-red-600 transition-all duration-300 transform hover:scale-110"
+                                                        onClick={() => alert("Yakin? Coba klik 'Yes' deh :)")}
+                                                    >
+                                                        No
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
+
+                                        {confirmationStep > 0 && confirmationStep < 6 && (
+                                            <div key={confirmationStep} className="animate-fade-in w-full flex flex-col items-center justify-center">
+                                                {confirmationStep === 1 && <p className="text-2xl md:text-3xl mb-6">Apakah kamu yakin?</p>}
+                                                {confirmationStep === 2 && <p className="text-2xl md:text-3xl mb-6">Nggak nyesel kan?</p>}
+                                                {confirmationStep === 3 && <p className="text-2xl md:text-3xl mb-6">Beneran serius nih??</p>}
+                                                {confirmationStep === 4 && <p className="text-2xl md:text-3xl mb-6">yeaaaayyyy (salting)</p>}
+                                                
+                                                {confirmationStep < 4 && (
+                                                    <button 
+                                                        onClick={handleYesConfirmation}
+                                                        className="bg-pink-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-110"
+                                                    >
+                                                        {confirmationStep === 1 && "Iya, yakin banget!"}
+                                                        {confirmationStep === 2 && "Nggak akan pernah!"}
+                                                        {confirmationStep === 3 && "Serius pake banget!"}
+                                                    </button>
+                                                )}
+                                            </div>
+                                        )}
+                                        
+                                        {confirmationStep === 6 && (
+                                            <div key="step-6" className="animate-fade-in w-full">
+                                                <p className="mt-8 text-3xl font-bold text-pink-600">SO NOW I CAN CALL U MY DARLING😘😜❤️</p>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>

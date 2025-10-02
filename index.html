@@ -54,6 +54,15 @@
         /* Smoke Animation */
         @keyframes puff-out-smoke { 0% { transform: translateY(0) scale(1); opacity: 0.7; } 100% { transform: translateY(-80px) scale(4); opacity: 0; } }
         .animate-puff-out { animation: puff-out-smoke 2.5s ease-out forwards; }
+        
+        /* Envelope Animation */
+        .envelope { position: relative; width: 200px; height: 125px; }
+        .envelope-back { position: absolute; width: 100%; height: 100%; background-color: #f48fb1; border-radius: 5px; }
+        .envelope-letter { position: absolute; top: -50px; left: 10%; width: 80%; height: 90%; background-color: white; border-radius: 3px; box-shadow: 0 0 5px rgba(0,0,0,0.1); animation: slide-in-letter 1.5s ease-out forwards; animation-delay: 0.2s; z-index: 1; }
+        .envelope-front { position: absolute; bottom: 0; width: 100%; height: 60%; background: linear-gradient(to bottom, #f48fb1, #f06292); border-radius: 0 0 5px 5px; z-index: 2; }
+        .envelope-flap { position: absolute; top: 0; width: 100%; height: 65%; background: linear-gradient(to top, #f48fb1, #f8bbd0); transform-origin: top center; clip-path: polygon(0 0, 100% 0, 50% 100%); animation: close-flap 0.8s ease-in-out forwards; animation-delay: 1.8s; z-index: 3; }
+        @keyframes slide-in-letter { from { transform: translateY(0); } to { transform: translateY(60px); } }
+        @keyframes close-flap { from { transform: rotateX(0deg); } to { transform: rotateX(180deg); } }
     </style>
 <script type="importmap">
 {
@@ -67,7 +76,7 @@
 </head>
 <body class="bg-pink-50 text-gray-800 min-h-screen">
 
-    <audio id="background-music" src="romantis.mp3" loop></audio>
+    <audio id="background-music" src="https://cdn.pixabay.com/audio/2022/02/14/audio_29c03a985c.mp3" loop></audio>
 
     <div class="hearts">
         <div class="heart h1"></div> <div class="heart h2"></div> <div class="heart h3"></div> <div class="heart h4"></div> <div class="heart h5"></div>
@@ -107,7 +116,7 @@
 
         <!-- Sections -->
         <section id="twenty" class="py-16 md:py-24 px-4 text-center">
-            <h2 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-8">Selamat Dua Puluh Tahun</h2>
+            <h2 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-8">tak terasa sudah dua puluh tahun hidup di dunia yah</h2>
             <div class="flex justify-center items-center text-pink-400" style="text-shadow: 2px 2px 10px rgba(236, 72, 153, 0.3);">
                 <span class="text-9xl md:text-[12rem] font-bold">2</span>
                 <div class="mx-4"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-16 h-16 md:w-24 md:h-24 text-pink-300"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></div>
@@ -151,10 +160,10 @@
         <section id="greeting" class="py-16 md:py-24 px-4 text-center">
             <h2 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-8">Ucapanku Untukmu</h2>
             <div class="max-w-3xl mx-auto bg-white/70 backdrop-blur-sm p-8 md:p-12 rounded-lg shadow-lg text-left text-lg leading-relaxed">
-                <p class="mb-4">Untuk kekasih hatiku,</p>
-                <p class="mb-4">Selamat ulang tahun, cintaku. Hari ini adalah hari di mana dunia diberkati dengan kehadiranmu, dan aku adalah orang yang paling beruntung karena bisa memilikimu dalam hidupku. Setiap hari bersamamu adalah anugerah yang tak ternilai.</p>
-                <p class="mb-4">Kamu adalah cahayaku di saat gelap, alasanku untuk tersenyum, dan inspirasiku untuk menjadi orang yang lebih baik. Terima kasih untuk semua cinta, tawa, dan dukungan yang tak pernah berhenti kamu berikan.</p>
-                <p>Aku sangat mencintaimu, lebih dari kata-kata yang bisa kuucapkan. Selamat bertambah usia, sayang.</p>
+                <p class="mb-4">untuk intan payou,</p>
+                <p class="mb-4">Selamat ulang tahun yh, hari ini hari dimana dunia diberkati dengan kehadiranmu, dan aku adalah orang yang paling beruntung bisa menemanimu hingga saat ini. Setiap hari mendengar ocehanmu adalah anugerah yang tak ternilai untukku.</p>
+                <p class="mb-4">U're my shine, alasanku untuk tersenyum, dan inspirasiku untuk menjadi orang yang lebih baik. Terima kasih untuk semua cinta, tawa, dan dukungan yang tak pernah berhenti kamu berikan.</p>
+                <p>Selamat bertambah usia, Intan Payou.</p>
                 <p class="mt-6 font-great-vibes text-3xl text-right text-pink-500">- Dengan Penuh Cinta</p>
             </div>
         </section>
@@ -169,7 +178,7 @@
 
         <section id="video" class="py-16 md:py-24 px-4 text-center">
             <h2 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-8">Video Spesial Untukmu</h2>
-            <p class="max-w-3xl mx-auto mb-12 text-lg">Aku sudah menyiapkan video singkat yang merangkum perjalanan kita. Semoga kamu suka!</p>
+            <p class="max-w-3xl mx-auto mb-12 text-lg">silakan ditonton video singkat yg udh ak buat dengan sepenuh hati, Selamat Menyaksikan😇</p>
             <div class="aspect-video max-w-4xl mx-auto bg-pink-200 border-8 border-white shadow-xl rounded-lg flex items-center justify-center">
                 <div class="text-center text-pink-500">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mx-auto" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
@@ -180,10 +189,32 @@
 
         <section id="wishes" class="py-16 md:py-24 px-4 text-center">
             <h2 class="text-4xl md:text-6xl font-great-vibes text-pink-500 mb-8">Harapanmu Untuk Kita</h2>
-            <div class="max-w-3xl mx-auto bg-white/70 backdrop-blur-sm p-8 md:p-12 rounded-lg shadow-lg text-center text-lg leading-relaxed">
-                <p class="mb-6">Sekarang giliranmu, tuliskan apa harapanmu untuk hubungan kita ke depannya di sini...</p>
-                <textarea id="wish-textarea" class="w-full h-40 p-4 border-2 border-pink-200 rounded-lg focus:ring-pink-400 focus:border-pink-400 transition duration-300 text-gray-700 text-base" placeholder="Aku berharap kita..."></textarea>
-                <p id="wish-feedback" class="mt-6 text-pink-600 font-semibold hidden">Terima kasih sudah menuliskan harapanmu, sayang!</p>
+            <div class="max-w-3xl mx-auto bg-white/70 backdrop-blur-sm p-8 md:p-12 rounded-lg shadow-lg text-center text-lg leading-relaxed min-h-[350px] flex flex-col justify-center">
+                <div id="wish-form">
+                    <p class="mb-6">Sekarang giliranmu, tuliskan apa harapanmu untuk hubungan kita ke depannya di sini...</p>
+                    <textarea id="wish-textarea" class="w-full h-40 p-4 border-2 border-pink-200 rounded-lg focus:ring-pink-400 focus:border-pink-400 transition duration-300 text-gray-700 text-base" placeholder="Aku berharap kita..."></textarea>
+                    <button onclick="handleSendWish()" id="send-wish-btn" class="mt-6 bg-pink-500 text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-pink-600 transition-all duration-300 transform hover:scale-110">
+                        Kirim ke pujaan hati
+                    </button>
+                </div>
+                <div id="wish-result-container" class="hidden">
+                    <div id="envelope-animation" class="flex items-center justify-center h-40">
+                        <div class="envelope">
+                            <div class="envelope-back"></div>
+                            <div class="envelope-letter"></div>
+                            <div class="envelope-front"></div>
+                            <div class="envelope-flap"></div>
+                        </div>
+                    </div>
+                    <div id="wish-feedback" class="hidden animate-fade-in">
+                        <p class="text-pink-600 font-semibold text-2xl mb-6">
+                            Terima kasih sudah mengirimkan harapanmu, Ceuceu! Aku akan membacanya. ( SS in dong soalnya gabisa di save😭)
+                        </p>
+                         <button onclick="handleEditWish()" class="mt-4 bg-white text-pink-500 border border-pink-500 font-bold py-2 px-6 rounded-full shadow-lg hover:bg-pink-100 transition-all duration-300 transform hover:scale-110">
+                            Ubah Harapanmu
+                        </button>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -214,28 +245,65 @@
 
 <script>
     let confirmationStep = 0;
+    let questionProgressionStep = 0;
 
+    /*
+    ==================================================================================
+    === PANDUAN CARA MENAMBAHKAN FOTO KENANGAN (TUTORIAL EDIT MANUAL DI GITHUB) ===
+    ==================================================================================
+
+    Hai! Untuk menambahkan foto pada setiap kenangan, ikuti langkah-langkah mudah ini:
+
+    LANGKAH 1: UPLOAD FOTO KE GITHUB
+    1. Di halaman utama repository GitHub-mu, klik "Add file" lalu "Upload files".
+    2. Buat folder baru untuk menyimpan foto agar rapi. Caranya, ketik nama folder diikuti tanda slash (/), contoh: `images/`
+    3. Upload semua fotomu ke dalam folder `images` tersebut.
+    4. Setelah selesai, klik "Commit changes".
+
+    LANGKAH 2: SALIN PATH FOTO
+    1. Buka folder `images` yang baru kamu buat di GitHub.
+    2. Path atau alamat file-nya akan terlihat di URL browser atau bisa langsung kamu gunakan sebagai `images/nama-file-fotonya.jpg`.
+       Contoh: Jika kamu upload foto bernama `kenangan-1.jpg` ke folder `images`, maka path-nya adalah `images/kenangan-1.jpg`.
+
+    LANGKAH 3: EDIT KODE DI BAWAH INI
+    1. Untuk setiap "kenangan", tambahkan properti `imageUrl` diikuti dengan path fotomu di dalam tanda kutip.
+    2. Pastikan ada koma (,) setelah `imageUrl` jika `description` masih ada setelahnya.
+
+    CONTOH SEBELUM DIEDIT:
+    { description: "Ingat waktu pertama kali kita foto?..." }
+
+    CONTOH SESUDAH DIEDIT (dengan foto dari folder 'images'):
+    {
+      imageUrl: "images/kenangan-1.jpg",
+      description: "Ingat waktu pertama kali kita foto?..."
+    },
+
+    Ulangi langkah ini untuk semua kenangan yang ingin kamu tambahkan fotonya.
+    Jika sebuah kenangan tidak punya `imageUrl` atau dikosongkan (""), maka akan ditampilkan placeholder "Foto Kenangan".
+    Selamat mencoba! ❤️
+    ==================================================================================
+    */
     const memories = [
-        { description: "Ingat waktu kita pertama kali ketemu? Aku nggak akan pernah lupa senyum manismu hari itu. Momen itu mengubah segalanya." },
-        { description: "Perjalanan pertama kita ke pantai. Kita lari-larian dikejar ombak, ketawa sampai sakit perut. Hari itu aku sadar, aku mau lebih banyak hari seperti ini sama kamu." },
-        { description: "Malam saat kita nonton bintang sambil cerita semua mimpi kita. Di bawah langit yang sama, aku berjanji dalam hati untuk bantu kamu wujudkan semua mimpimu." },
-        { description: "Waktu kamu lagi sedih dan aku coba hibur dengan lelucon garingku. Bukannya ketawa, kamu malah nangis di pelukanku. Saat itu aku tahu, hatiku akan selalu jadi tempatmu pulang." },
-        { description: "Setiap momen sederhana, seperti minum kopi pagi atau nonton film di rumah, jadi luar biasa karena ada kamu di sampingku." },
-        { description: "Momen saat kita kehujanan dan berteduh di warung kecil, itu jadi salah satu kenangan favoritku." },
-        { description: "Pertama kali aku masakin buat kamu. Walaupun rasanya mungkin aneh, tapi kamu tetap bilang enak. Terima kasih ya." },
-        { description: "Saat kita nyanyi bareng di mobil, nggak peduli suara fals dan lirik salah semua. Yang penting kita bahagia." },
-        { description: "Waktu kita begadang sampai pagi cuma buat ngobrolin hal-hal nggak penting. Aku rindu momen-momen itu." },
-        { description: "Hari di mana kamu kenalin aku ke teman-temanmu. Aku merasa jadi orang paling beruntung di dunia." },
-        { description: "Setiap 'selamat pagi' dan 'selamat malam' darimu selalu berhasil membuat hariku lebih baik." },
-        { description: "Ingat saat kita mencoba resep baru dan dapurnya jadi berantakan? Itu kekacauan yang paling menyenangkan." },
-        { description: "Caramu menatapku saat aku sedang bercerita, seolah-olah aku satu-satunya orang di dunia ini." },
-        { description: "Momen saat kita saling diam, tapi tetap merasa nyaman karena tahu kita ada untuk satu sama lain." },
-        { description: "Ketika kamu memberiku semangat saat aku merasa gagal. Kamu adalah suporter terbaikku." },
-        { description: "Jalan-jalan sore tanpa tujuan, hanya menikmati kebersamaan kita. Aku suka itu." },
-        { description: "Melihatmu tertawa lepas karena leluconku adalah musik terindah buatku." },
-        { description: "Saat kamu memegang tanganku untuk pertama kalinya. Aku masih bisa merasakan debaran jantungku saat itu." },
-        { description: "Momen saat kita menyadari bahwa kita punya mimpi masa depan yang sama. Itu meyakinkan hatiku." },
-        { description: "Dan hari ini, di ulang tahunmu, adalah kenangan baru yang akan selalu aku simpan. Aku mencintaimu." }
+        { imageUrl: "https://picsum.photos/seed/kenangan1/400/300", description: "Ingat waktu pertama kali kita foto? jujur bingung ngomongny gmana, tpi yg ak liat antusiasme kmu yg bnget2 pngen foto sama ak😎. Rasanya ga enak kalau nolak." },
+        { imageUrl: "", description: "Waktu kita nekat foto bareng di pondok yeah, kmu mah enak dh lulus, ak mempertaruhkan 6 taun mondok demi satu kali foto sama kmu. hmm.....apa sii yang ga buat kmu😇" },
+        { imageUrl: "", description: "Ternyata foto ini jga ngebuat ak merasakan sesuatu yg lom pernah dirasakan lokh ketika itu, sebelomnya ga pernah ada foto berdua dikaca, saat itu ada kesempatan buat foto berdua di kaca rasanya nyaaaaman bangett" },
+        { imageUrl: "", description: "kukira kamu penggemar novel novel alay bgituh, trnyata emg iyaa....jujur dpet bnyak insight sinopsis novel2 yg emg lom pernah ak baca, jdinya yaa udh dengerin kmu aj yapping, ak nya oh oh aja sebenernya, wkwkwk" },
+        { imageUrl: "", description: " first photo box gabisa dibuat kata2, pokoknya tegang, bingung, malu malu kucing, ya akhirnya spontan ajh gayanyaa🫣" },
+        { imageUrl: "", description: "first time klo tau trnyata es krim versi mewah namanya gelatto, maap warga jelata ga tau....tpi pas itu berkesan jgk diajak keliling2 sekitar blok M pas sore sore😆" },
+        { imageUrl: "", description: " photobox tuk yg kesekian kalinya yey, bukannya tambah improve malah si onoh ilang dari kamera😮‍💨" },
+        { imageUrl: "", description: " difotoin sama fotografer handal, sebuah kehormatan besar, thx babukuh (aboel) telah mengabadikan momen ini. Pasca foto kyknya ada yg nanyain kepastian hubungan deh, katanya cemburu tkut bnyak yg ngintilin pas dh kuliah, siapa yahh yg ngomong🤔" },
+        { imageUrl: "", description: "yg kesekian kalinyaa yahh, alhamdulillah smakin hari smakin jago berpose, mana si cewenya keliatan mungil lgih di foto" },
+        { imageUrl: "", description: "second time foto depan kaca, makin nempel yahhh" },
+        { imageUrl: "", description: "ini jugakk, siapa yg ngide megang pipi yh, jujur ga kepikiran..." },
+        { imageUrl: "", description: "ini nihh, orang lagi kelaperan ga diwajarin makan double chicken, pdalah lom makan dari pagi....dalem hatinya shock kali yaa ngeliat org makan porsi kulii, ya maap dehh🙏. mana setelahnya dijejelin sama jasuke lagii yakk" },
+        { imageUrl: "", description: "disini vibesnya enak banget buat ngobrol, cuman sayang kurang lamaa...tpi kata ak ga worth it sii itu wingsnya cilik cilik" },
+        { imageUrl: "", description: " waktunya membuat cawan dan vas bunga yg bentuknya anomali ituuu, pdahal rencanany mau tukeran, tpi gajadiii, huhu" },
+        { imageUrl: "", description: " si teteh balik ke jkt, kyknya dia mau nangis deh meninggalkan nangor, secinta itu dia sama jatos, laen kali maen lagi yah" },
+        { imageUrl: "", description: " ketemu si afgan yg biasa aja yaah, dia ga nyadar aj klo disampingnya lebih ngartis dripada si artis" },
+        { imageUrl: "", description: "pokoknya yg ngide2 bgini itu si ceuceu yaa, ak mah manut2 ajh" },
+        { imageUrl: "", description: "its the best photo in the universe, absolute cinema...makasi lokh fotografernya ni handal bnget. Didukung jgak ama muka gantengnya si cowok dan cantiknya si cewek" },
+        { imageUrl: "", description: " ini kalau ak ga minta orang buat motoin kyknya gabakal ada kenangannya sii, untung orgnya juga bagus yh motoin nyh😆" },
+        { imageUrl: "", description: "makin hari makin nempel dan makin monyong ajahh tuhh, wkwk" }
     ];
 
     function handleOpen() {
@@ -270,10 +338,96 @@
         document.getElementById('candle-message').innerHTML = '<p class="mt-8 text-2xl font-bold text-pink-600 animate-fade-in">Horeee! Semoga semua harapanmu terkabul!</p>';
     }
 
+    function handleSendWish() {
+        const textarea = document.getElementById('wish-textarea');
+        if (!textarea.value.trim()) return;
+
+        document.getElementById('wish-form').classList.add('hidden');
+        const wishResult = document.getElementById('wish-result-container');
+        wishResult.classList.remove('hidden');
+
+        // Ensure animation is visible and feedback is not
+        document.getElementById('envelope-animation').classList.remove('hidden');
+        document.getElementById('wish-feedback').classList.add('hidden');
+
+        setTimeout(() => {
+            document.getElementById('envelope-animation').classList.add('hidden');
+            document.getElementById('wish-feedback').classList.remove('hidden');
+        }, 2800); // Wait for animation to finish
+    }
+    
+    function handleEditWish() {
+        document.getElementById('wish-result-container').classList.add('hidden');
+        document.getElementById('wish-form').classList.remove('hidden');
+    }
+
     function showFinalQuestion() {
         document.getElementById('open-question-btn-container').classList.add('hidden');
-        confirmationStep = 0;
-        renderQuestionStep();
+        questionProgressionStep = 1;
+        renderQuestionProgression();
+    }
+
+    function renderAnimatedWords(text, container, className = "text-3xl md:text-4xl text-gray-700 mb-8 max-w-2xl mx-auto") {
+        const words = text.split(' ');
+        const p = document.createElement('p');
+        p.className = className;
+        words.forEach((word, index) => {
+            const span = document.createElement('span');
+            span.className = 'inline-block animate-fade-in';
+            span.style.animationDelay = `${index * 300}ms`;
+            span.style.opacity = '0';
+            span.textContent = word + ' ';
+            p.appendChild(span);
+        });
+        container.innerHTML = '';
+        container.appendChild(p);
+    }
+
+    function renderQuestionProgression() {
+        const container = document.getElementById('question-container');
+        container.innerHTML = `<div key="${questionProgressionStep}" class="animate-fade-in w-full"></div>`;
+        const contentDiv = container.firstChild;
+
+        const pClass = "text-3xl md:text-4xl text-gray-700 mb-8 max-w-2xl mx-auto";
+        let nextDelay = 2000;
+
+        switch(questionProgressionStep) {
+            case 1:
+                contentDiv.innerHTML = `<p class="${pClass}">will u be my girlfriend for 4 times</p>`;
+                break;
+            case 2:
+                renderAnimatedWords("spring, summer, autumn, and winter", contentDiv, pClass);
+                nextDelay = 3000;
+                break;
+            case 3:
+                contentDiv.innerHTML = `<p class="${pClass}">oh no may be 3 times</p>`;
+                break;
+            case 4:
+                renderAnimatedWords("Yesterday, today, and tomorrow", contentDiv, pClass);
+                nextDelay = 3500;
+                break;
+            case 5:
+                contentDiv.innerHTML = `<p class="${pClass}">hmm...may be 2 times</p>`;
+                break;
+            case 6:
+                renderAnimatedWords("day and night", contentDiv, pClass);
+                nextDelay = 2500;
+                break;
+            case 7:
+                contentDiv.innerHTML = `<p class="${pClass}">oh no...i wanna 1 times</p>`;
+                break;
+            case 8:
+                contentDiv.innerHTML = `<p class="${pClass}">everyday</p>`;
+                nextDelay = 1500;
+                break;
+            case 9:
+                confirmationStep = 0;
+                renderQuestionStep();
+                return; // Stop progression loop
+        }
+        
+        questionProgressionStep++;
+        setTimeout(renderQuestionProgression, nextDelay);
     }
     
     function handleYesConfirmation() {
@@ -294,7 +448,6 @@
             case 0:
                 content = `
                     <div class="animate-fade-in w-full">
-                        <p class="text-3xl md:text-4xl text-gray-700 mb-8 max-w-2xl mx-auto">Will you be my girlfriend, again and forever?</p>
                         <div class="flex justify-center gap-6 mt-10">
                             <button onclick="handleYesConfirmation()" class="bg-green-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-110">Yes!</button>
                             <button onclick="alert('Yakin? Coba klik \\'Yes\\' deh :)')" class="bg-red-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-red-600 transition-all duration-300 transform hover:scale-110">No</button>
@@ -371,10 +524,14 @@
             item.style.animationDelay = `${index * 350}ms`;
             item.style.opacity = '0';
             
+            const imageContent = memory.imageUrl
+                ? `<img src="${memory.imageUrl}" alt="Foto Kenangan ${index + 1}" class="w-full h-full object-cover">`
+                : `<span class="text-pink-400 font-medium">Foto Kenangan ${index + 1}</span>`;
+
             item.innerHTML = `
                 <div class="md:w-1/2 w-full p-2 bg-white shadow-lg transform transition-transform duration-500 hover:scale-105 hover:shadow-2xl hover:z-10" style="transform: rotate(${rotation}deg)">
-                    <div class="w-full h-64 bg-pink-100 flex items-center justify-center border-2 border-white">
-                        <span class="text-pink-400 font-medium">Foto Kenangan ${index + 1}</span>
+                    <div class="w-full h-64 bg-pink-100 flex items-center justify-center border-2 border-white overflow-hidden">
+                        ${imageContent}
                     </div>
                 </div>
                 <div class="md:w-1/2 w-full ${isEven ? 'md:text-right' : 'md:text-left'} text-center">
@@ -384,12 +541,19 @@
             memoriesContainer.appendChild(item);
         });
 
-        document.getElementById('wish-textarea').addEventListener('input', (e) => {
-            const feedback = document.getElementById('wish-feedback');
-            if (e.target.value) {
-                feedback.classList.remove('hidden');
+        const wishTextarea = document.getElementById('wish-textarea');
+        const sendWishBtn = document.getElementById('send-wish-btn');
+        
+        sendWishBtn.disabled = true;
+        sendWishBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+        wishTextarea.addEventListener('input', () => {
+            if (wishTextarea.value.trim()) {
+                sendWishBtn.disabled = false;
+                sendWishBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             } else {
-                feedback.classList.add('hidden');
+                sendWishBtn.disabled = true;
+                sendWishBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
         });
     });
